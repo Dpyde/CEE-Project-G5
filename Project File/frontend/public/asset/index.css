@@ -1,0 +1,25 @@
+@font-face {
+    font-family: "Itim";
+    src: url("./Itim-Regular.ttf");
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Itim;
+    color: var(--color-primary);
+}
+
+:root {
+    --color-button: #ff964f;
+    --color-primary: #1c1c1c;
+    --color-secondary: #cfcfc4;
+
+    --space-big: 20px;
+    --space-small: 12px;
+
+    --font-big: calc(32px + 1.5vw);
+    --font-medium: calc(16px + 1.5vw);
+    --font-small: calc(12px + 1.5vw);
+}
