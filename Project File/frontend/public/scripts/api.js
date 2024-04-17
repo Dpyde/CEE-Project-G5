@@ -23,20 +23,54 @@ export async function deleteItem(id, item) {
 }
 
 export async function filterItems(filterName, lowerPrice, upperPrice) {
-  // TODO3: implement this function
-  // You may need to understand handleFilterItem() function in ./table.js before implementing this function.
-  return /* return the filted items */;
+  try {
+    let data = {
+      filterName: filterName,
+      lowerPrice: lowerPrice,
+      upperPrice: upperPrice,
+    };
+
+    // Make a POST request to the backend with the data in the body
+    const response = await fetch(`${BACKEND_URL}/items/filter`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok.");
+    }
+
+    // Parse the response as JSON
+    const filteredItems = await response.json();
+
+    // Return the filtered items
+    return filteredItems;
+  } catch (error) {
+    console.error("Error fetching filtered items:", error);
+    return [];
+  }
 }
 
 export async function getMembers() {
-  // TODO4: implement this function
-  return /* return all members */;
+  const members = await fetch(`${BACKEND_URL}/members`).then((r) => r.json());
+  return members;
 }
 
 export async function createMember(member) {
-  // TODO4: implement this function
+  await fetch(`${BACKEND_URL}/members`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(member),
+  });
 }
 
 export async function deleteMember(id, item) {
-  // TODO4: implement this function
+  await fetch(`${BACKEND_URL}/members/${id}`, {
+    method: "DELETE",
+  });
 }
