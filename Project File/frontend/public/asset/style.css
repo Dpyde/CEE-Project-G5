@@ -5,23 +5,63 @@
   background: #b2fba5;
 }
 
-h1 {
-  font-size: var(--font-big);
-}
-
-/******************************** home page ********************************/
-.home-container {
+.container {
   width: 95%;
   max-width: 640px;
   align-self: center;
   height: 100vh;
-  padding: 20px 0;
+  padding: 80px 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
 }
 
+h1 {
+  font-size: var(--font-big);
+  display: inline;
+}
+
+p {
+  font-size: var(--font-small);
+}
+
+.button {
+  background-color: var(--color-button);
+  font-size: var(--font-small);
+  padding: 20px 40px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
+  transition: linear .3s;
+  text-decoration: none;
+
+  &:hover {
+    box-shadow: none;
+    letter-spacing: 1px;
+  }
+
+  &:active {
+    transition: 0s;
+    box-shadow: 0px 0px 100px rgba(0, 0, 0, 0.3) inset;
+  }
+}
+
+.input {
+  border: none;
+  outline: none;
+  font-size: var(--font-medium);
+  color: var(--color-primary);
+  background-color: transparent;
+  text-align: center;
+  transition: .3s;
+}
+
+/******************************** home page ********************************/
 .home-img-list {
   width: auto;
   height: auto;
@@ -57,15 +97,6 @@ h1 {
   }
 }
 
-.home-username-input-display input {
-  border: none;
-  outline: none;
-  font-size: var(--font-medium);
-  color: var(--color-primary);
-  background-color: transparent;
-  text-align: center;
-}
-
 .home-enter-button-display {
   width: 50%;
   display: flex;
@@ -75,25 +106,22 @@ h1 {
   align-content: center;
 }
 
-.home-enter-button-display button {
-  background-color: var(--color-button);
-  font-size: var(--font-small);
-  padding: 20px 10px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  font-weight: bold;
-  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
-  transition: linear .3s;
+/******************************** create room page & join room page ********************************/
+.createRoom-header, .joinRoom-header {
+  display: flex;
+  gap: var(--space-big);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--margin-big);
+}
 
-  &:hover {
-    box-shadow: none;
-    letter-spacing: 1px;
-  }
+#joinRoom-input {
+  caret-color: transparent;
+  border-radius: 48px;
 
-  &:active {
-    transition: 0s;
-    box-shadow: 0px 0px 100px rgba(0, 0, 0, 0.3) inset;
+  &:focus {
+    background-color: white;
   }
+  
 }
