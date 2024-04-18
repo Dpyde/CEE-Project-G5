@@ -14,17 +14,17 @@ wss.on('connection', function connection(ws) {
             case 'create':
                 const roomId = generateRoomId();
                 rooms[roomId] = { roomUniqueId: roomId, player1: ws, player2: null, score1: 0, score2: 0 };
-                await createRoom(rooms[roomId]);
+                // await createRoom(rooms[roomId]);
                 ws.send(JSON.stringify({ type: 'created', roomId: roomId }));
                 break;
             case 'join':
                 const roomIdToJoin = data.roomId;
                 if (rooms[roomIdToJoin] && !rooms[roomIdToJoin].player2) {
                     rooms[roomIdToJoin].player2 = ws;
-                    const roomss = await getRooms();
-                    await deleteRoom(roomss._id);
-                    roomss[roomIdToJoin].player2 = ws;
-                    await createRoom(roomss[roomIdToJoin]);
+                    // const roomss = await getRooms();
+                    // await deleteRoom(roomss._id);
+                    // roomss[roomIdToJoin].player2 = ws;
+                    // await createRoom(roomss[roomIdToJoin]);
                     ws.send(JSON.stringify({ type: 'joined', roomId: roomIdToJoin }));
                     startGame(roomIdToJoin);
                 } else {
