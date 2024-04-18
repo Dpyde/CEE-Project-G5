@@ -13,12 +13,10 @@ ws.onmessage = function(event) {
             break;
         case 'created':
             messagesDiv.innerHTML = 'Room created with ID: ' + data.roomId;
-            document.getElementById('createJoin').style.display = 'none';
             document.getElementById('choices').style.display = 'block';
             break;
         case 'joined':
             messagesDiv.innerHTML = 'Joined room with ID: ' + data.roomId;
-            document.getElementById('createJoin').style.display = 'none';
             document.getElementById('choices').style.display = 'block';
             break;
         case 'start':
