@@ -10,16 +10,24 @@
     <body>
         <div class="bg">
             <div class="container">
-                <header class="createRoom-header">
-                    <h1>Waiting for player</h1>
+                <header class="joinRoom-header">
+                    <h1>Enter code room</h1>
                     <lord-icon
-                        class="creatRoom-waiting-dot"
-                        src="https://cdn.lordicon.com/jpgpblwn.json"
-                        trigger="loop"
-                        style="width: 32px; height: 32px;"
+                        src="https://cdn.lordicon.com/xcrjfuzb.json"
+                        trigger="hover"
+                        colors="primary:#1c1c1c"
+                        style="width: 32px; height: 32px"
                     >
                     </lord-icon>
-                    <p>your room code is : <span id="createRoom-code">"random"</span></p>
+                    <form>
+                        <input
+                            class="input"
+                            id="joinRoom-input"
+                            type="text"
+                            placeholder="..."
+                            autocomplete="off"
+                        />
+                    </form>
                 </header>
                 <a class="button" href="index.html">Back</a>
             </div>

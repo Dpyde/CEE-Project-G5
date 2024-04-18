@@ -34,9 +34,11 @@ p {
   border: none;
   outline: none;
   cursor: pointer;
+  text-align: center;
   font-weight: bold;
   box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
   transition: linear .3s;
+  text-decoration: none;
 
   &:hover {
     box-shadow: none;
@@ -47,6 +49,16 @@ p {
     transition: 0s;
     box-shadow: 0px 0px 100px rgba(0, 0, 0, 0.3) inset;
   }
+}
+
+.input {
+  border: none;
+  outline: none;
+  font-size: var(--font-medium);
+  color: var(--color-primary);
+  background-color: transparent;
+  text-align: center;
+  transition: .3s;
 }
 
 /******************************** home page ********************************/
@@ -85,15 +97,6 @@ p {
   }
 }
 
-.home-username-input-display input {
-  border: none;
-  outline: none;
-  font-size: var(--font-medium);
-  color: var(--color-primary);
-  background-color: transparent;
-  text-align: center;
-}
-
 .home-enter-button-display {
   width: 50%;
   display: flex;
@@ -103,12 +106,22 @@ p {
   align-content: center;
 }
 
-/******************************** create room page ********************************/
-.createRoom-header {
+/******************************** create room page & join room page ********************************/
+.createRoom-header, .joinRoom-header {
   display: flex;
   gap: var(--space-big);
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-bottom: var(--margin-big);
+}
+
+#joinRoom-input {
+  caret-color: transparent;
+  border-radius: 48px;
+
+  &:focus {
+    background-color: white;
+  }
+  
 }
