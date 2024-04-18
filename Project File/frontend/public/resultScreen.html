@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CEE-Project | G5</title>
+        <link rel="stylesheet" href="./asset/index.css" />
+        <link rel="stylesheet" href="./asset/style.css" />
+    </head>
+    <body>
+        <div class="bg">
+            <div class="container">
+                <header class="result-header">
+                        <!-- if player win h1 will show You Win -->
+                        <!-- if player lost h1 will show You Lost -->
+                    <h1>You Win</h1>
+                    
+                    <!-- span tag tell the scores -->
+                    <p>Score <span>4</span> : <span>1</span></p>
+                        <!-- if player win in section show icon id=win-icon -->
+                        <!-- if player lose in section show icon id=lose-icon -->
+                    <section>
+                        <lord-icon
+                            id="win-icon"
+                            src="https://cdn.lordicon.com/jcepibgt.json"
+                            trigger="loop"
+                            delay="700"
+                            colors="primary:#1c1c1c"
+                            style="width: 64px; height: 64px"
+                        >
+                        </lord-icon>
+                        <!-- <lord-icon
+                            id="lose-icon"
+                            src="https://cdn.lordicon.com/sbrtyqxj.json"
+                            trigger="loop"
+                            delay="700"
+                            colors="primary:#1c1c1c"
+                            style="width: 64px; height: 64px"
+                        >
+                        </lord-icon> -->
+                    </section>
+                </header>
+                <section class="button-set-display">
+                    <!-- button play again waiting for implementing -->
+                    <a class="button" onclick="waitingForImplement()"
+                        >Play again</a
+                    >
+                    <a class="button" href="startScreen.html"
+                        >Back to main menu</a
+                    >
+                </section>
+            </div>
+        </div>
+        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    </body>
+</html>
