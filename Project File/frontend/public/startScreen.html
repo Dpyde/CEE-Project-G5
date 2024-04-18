@@ -29,19 +29,29 @@
                     />
                 </section>
                 <section class="home-username-input-display">
+                    <!-- input use for get  username -->
                     <input
                         class="input"
+                        id="username-input"
                         type="text"
-                        name="name"
                         autocomplete="off"
                         placeholder="Enter Your Name"
                     />
                 </section>
                 <section class="home-enter-button-display">
-                    <a class="button" href="creatRoom.html">Create Game</a>
-                    <a class="button" href="joinRoom.html">Join Game</a>
+                    <a
+                        class="button"
+                        onclick="goToWithCheckInput('./creatRoom.html')"
+                        >Create Game</a
+                    >
+                    <a
+                        class="button"
+                        onclick="goToWithCheckInput('./joinRoom.html')"
+                        >Join Game</a
+                    >
                 </section>
             </div>
         </div>
+        <script src="./scripts/index.js"></script>
     </body>
 </html>
