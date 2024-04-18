@@ -16,9 +16,8 @@ export const createRoom = async (req, res) => {
 };
 
 export const getRooms = async (req, res) => {
-  const Rooms = await Room.find();
-
-  res.status(200).json(Rooms);
+    const Rooms = await Room.find();
+    res.status(200).json(Rooms);
 };
 
 export const deleteRoom = async (req, res) => {
