@@ -6,22 +6,41 @@ ws.onopen = function() {
 
 ws.onmessage = function(event) {
     const data = JSON.parse(event.data);
+    const messagesDiv = document.getElementById('joinRoom-input');
     switch (data.type) {
+        case 'waiting':
+            messagesDiv.innerHTML = data.player + ' is waiting for another player.';
+            break;
         case 'created':
-            console.log('Room created with ID: ' + data.roomId);
+            messagesDiv.innerHTML = 'Room created with ID: ' + data.roomId;
+            document.getElementById('createJoin').style.display = 'none';
+            document.getElementById('choices').style.display = 'block';
             break;
         case 'joined':
-            console.log('Joined room with ID: ' + data.roomId);
+            messagesDiv.innerHTML = 'Joined room with ID: ' + data.roomId;
+            document.getElementById('createJoin').style.display = 'none';
+            document.getElementById('choices').style.display = 'block';
+            break;
+        case 'start':
+            messagesDiv.innerHTML = 'Game started! You are ' + data.player;
             break;
         case 'error':
-            console.error(data.message);
+            messagesDiv.innerHTML = 'Error: ' + data.message;
+            break;
+        case 'opponent_choice':
+            messagesDiv.innerHTML = 'Opponent chose: ' + data.choice;
             break;
     }
 };
 
+function createRoom() {
+    ws.send(JSON.stringify({ type: 'create' }));
+}
 
-// create room
-// ws.send(JSON.stringify({ type: 'create' }));
+function joinRoom(roomId) {
+    ws.send(JSON.stringify({ type: 'join', roomId: roomId }));
+}
 
-// join room
-// ws.send(JSON.stringify({ type: 'join', roomId: 'roomId' }));
+function sendChoice(roomId, choice) {
+    ws.send(JSON.stringify({ type: 'choice', roomId: roomId, choice: choice }));
+}
