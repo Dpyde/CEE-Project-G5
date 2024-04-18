@@ -1,14 +1,66 @@
-import Room from "../models/roomModel.js";
+import { createRoom, getRooms } from '../api.js';
+import { deleteRoom } from './roomController.js';
 
-let roomUniqueId = null;
-let player1 = false;
+const WebSocket = require('ws');
 
-function createGame() {
-    player1 = true;
+const wss = new WebSocket.Server({ port: 8080 });
+
+let rooms = {};
+
+wss.on('connection', function connection(ws) {
+    ws.on('message', async function incoming(message) {
+        const data = JSON.parse(message);
+        switch (data.type) {
+            case 'create':
+                const roomId = generateRoomId();
+                rooms[roomId] = { roomUniqueId: roomId, player1: ws, player2: null, score1: 0, score2: 0 };
+                await createRoom(rooms[roomId]);
+                ws.send(JSON.stringify({ type: 'created', roomId: roomId }));
+                break;
+            case 'join':
+                const roomIdToJoin = data.roomId;
+                if (rooms[roomIdToJoin] && !rooms[roomIdToJoin].player2) {
+                    rooms[roomIdToJoin].player2 = ws;
+                    const roomss = await getRooms();
+                    await deleteRoom(roomss._id);
+                    roomss[roomIdToJoin].player2 = ws;
+                    await createRoom(roomss[roomIdToJoin]);
+                    ws.send(JSON.stringify({ type: 'joined', roomId: roomIdToJoin }));
+                    startGame(roomIdToJoin);
+                } else {
+                    ws.send(JSON.stringify({ type: 'error', message: 'Room not found or full' }));
+                }
+                break;
+            case 'choice':
+                const roomIdToSend = data.roomId;
+                const choice = data.choice;
+                if (rooms[roomIdToSend]) {
+                    const player1 = rooms[roomIdToSend].player1;
+                    const player2 = rooms[roomIdToSend].player2;
+                    if (ws === player1) {
+                        player2.send(JSON.stringify({ type: 'opponent_choice', choice: choice }));
+                    } else if (ws === player2) {
+                        player1.send(JSON.stringify({ type: 'opponent_choice', choice: choice }));
+                    }
+                }
+                break;
+        }
+    });
+});
+
+function startGame(roomId) {
+    rooms[roomId].player1.send(JSON.stringify({ type: 'start', player: 'Player 1' }));
+    rooms[roomId].player2.send(JSON.stringify({ type: 'start', player: 'Player 2' }));
 }
 
-function joinGame() {
-    roomUniqueId = document.getElementById('roomUniqueId').value;
+function generateRoomId() {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < 4; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }
 
 function checkWinner() {
@@ -30,28 +82,4 @@ function checkWinner() {
         if (p2Choice == "rock") {result = "P1";}
         else {result = "P2";}
     }
-}
-
-function sendChoice(rpsValue) {
-    const choiceEvent = player1 ? "p1Choice" : "p2Choice";
-    socket.emit(choiceEvent,{
-        rpsValue: rpsValue,
-        roomUniqueId: roomUniqueId
-    });
-    let playerChoiceButton = document.getElementById('button');
-    playerChoiceButton.style.display = 'block';
-    playerChoiceButton.classList.add(rpsValue.toString().toLowerCase());
-    playerChoiceButton.innerText = rpsValue;
-    document.getElementById('player1Choice').innerHTML = "";
-    document.getElementById('player1Choice').appendChild(playerChoiceButton);
-}
-
-function createOpponentChoiceButton(data) {
-    document.getElementById('opponentState').innerHTML = "Opponent made a choice";
-    let opponentButton = document.createElement('button');
-    opponentButton.id = 'opponentButton';
-    opponentButton.classList.add(data.rpsValue.toString().toLowerCase());
-    opponentButton.style.display = 'none';
-    opponentButton.innerText = data.rpsValue;
-    document.getElementById('player2Choice').appendChild(opponentButton);
 }
