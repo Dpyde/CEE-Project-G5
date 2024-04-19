@@ -1,4 +1,5 @@
 import Room from '../models/roomModel.js';
+import {getRooms, createRoom, deleteRoom} from '../controllers/roomController.js';
 import express from 'express'
 import {v4} from 'uuid'
 
@@ -11,7 +12,7 @@ const rooms = {};
 app.use(express.static('public'));
 
 app.get('/events/:playerName?/:roomId?', async (req, res) => {
-  console.log(req.params)
+    console.log(req.params)
     const roomId = req.params.roomId;
     const playerName = req.params.playerName;
     console.log(roomId)

@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // use routes
-app.use("/rooms", RoomRoute);
+// app.use("/rooms", RoomRoute);
 app.use("/game", GameController)
 
 export default app;
