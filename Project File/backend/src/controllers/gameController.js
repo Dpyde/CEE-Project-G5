@@ -1,57 +1,134 @@
-import { createRoom, getRooms } from '../api.js';
-import { deleteRoom } from './roomController.js';
+import Room from '../models/roomModel';
 
-const WebSocket = require('ws');
+const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 
-const wss = new WebSocket.Server({ port: 8080 });
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-let rooms = {};
+// Store game rooms and their players
+const rooms = {};
 
-wss.on('connection', function connection(ws) {
-    ws.on('message', async function incoming(message) {
-        const data = JSON.parse(message);
-        switch (data.type) {
-            case 'create':
-                const roomId = generateRoomId();
-                rooms[roomId] = { roomUniqueId: roomId, player1: ws, player2: null, score1: 0, score2: 0 };
-                // await createRoom(rooms[roomId]);
-                ws.send(JSON.stringify({ type: 'created', roomId: roomId }));
-                break;
-            case 'join':
-                const roomIdToJoin = data.roomId;
-                if (rooms[roomIdToJoin] && !rooms[roomIdToJoin].player2) {
-                    rooms[roomIdToJoin].player2 = ws;
-                    // const roomss = await getRooms();
-                    // await deleteRoom(roomss._id);
-                    // roomss[roomIdToJoin].player2 = ws;
-                    // await createRoom(roomss[roomIdToJoin]);
-                    ws.send(JSON.stringify({ type: 'joined', roomId: roomIdToJoin }));
-                    startGame(roomIdToJoin);
-                } else {
-                    ws.send(JSON.stringify({ type: 'error', message: 'Room not found or full' }));
-                }
-                break;
-            case 'choice':
-                const roomIdToSend = data.roomId;
-                const choice = data.choice;
-                if (rooms[roomIdToSend]) {
-                    const player1 = rooms[roomIdToSend].player1;
-                    const player2 = rooms[roomIdToSend].player2;
-                    if (ws === player1) {
-                        player2.send(JSON.stringify({ type: 'opponent_choice', choice: choice }));
-                    } else if (ws === player2) {
-                        player1.send(JSON.stringify({ type: 'opponent_choice', choice: choice }));
-                    }
-                }
-                break;
+app.use(express.static('public'));
+
+app.get('/events/:roomId/:playerName', async (req, res) => {
+    const roomId = req.params.roomId;
+    const playerName = req.params.playerName;
+  
+    try {
+      let room = await Room.findOne({ roomId });
+  
+      if (!room) {
+        // If the room ID is not found, create a new room
+        room = new Room({
+          roomId: generateRoomId(),
+          players: [{ id: uuidv4(), name: playerName, choice: null, score: 0 }],
+          state: null
+        });
+  
+        await room.save();
+        res.redirect(`/events/${roomId}/${playerName}`);
+        return;
+      }
+  
+      // Add player to the existing room
+      const clientId = uuidv4();
+      room.players.push({ id: clientId, name: playerName, choice: null, score: 0 });
+      await room.save();
+
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+  
+      res.write(`event: connected\ndata: ${clientId}\n\n`);
+  
+      // If the room is full (has two players), start the game
+      if (room.players.length === 2) {
+        startGame(roomId);
+      }
+  
+      // Handle client disconnect
+      req.on('close', async () => {
+        room.players = room.players.filter(player => player.id !== clientId);
+        await room.save();
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal server error');
+    }
+  });
+  
+  app.post('/choose/:roomId/:choice', async (req, res) => {
+    const roomId = req.params.roomId;
+    const playerId = req.body.playerId;
+    const choice = req.params.choice;
+  
+    try {
+      const room = await Room.findOne({ roomId });
+  
+      if (!room) {
+        res.status(404).send('Room not found');
+        return;
+      }
+  
+      const playerIndex = room.players.findIndex(player => player.id === playerId);
+      if (playerIndex === -1) {
+        res.status(404).send('Player not found');
+        return;
+      }
+  
+      // Update player's choice
+      room.players[playerIndex].choice = choice;
+      await room.save();
+  
+      // Check if all players have made their choices
+      const allPlayersChose = room.players.every(player => player.choice !== null);
+  
+      if (allPlayersChose) {
+        const result = checkWinner();
+        if (result === "Tie") {
+            room.state["winner"] = "Tie";
+            await room.save();
+        } else if (result === "P1") {
+            const fname = room.players[0].name;
+            room.players[0].score = room.players[0].score + 1;
+            room.state["winner"] = fname;
+            await room.save();
+        } else if (result === "P2") {
+            const fname = room.players[1].name;
+            room.players[1].score = room.players[1].score + 1;
+            room.state["winner"] = fname;
+            await room.save();
         }
+        sendToRoom(roomId, { type: 'game_state_update', state: room.state });
+      }
+  
+      res.sendStatus(200);
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal server error');
+    }
+  });
+
+function sendToRoom(roomId, message) {
+  if (rooms[roomId]) {
+    rooms[roomId].players.forEach(player => {
+      player.res.write(`data: ${JSON.stringify(message)}\n\n`);
     });
-});
+  }
+}
 
 function startGame(roomId) {
-    rooms[roomId].player1.send(JSON.stringify({ type: 'start', player: 'Player 1' }));
-    rooms[roomId].player2.send(JSON.stringify({ type: 'start', player: 'Player 2' }));
+    const initialGameState = { playerChoices: {} };
+    rooms[roomId].players.forEach(player => {
+      initialGameState.playerChoices[player.id] = null;
+    });
+    sendToRoom(roomId, { type: 'game_start', state: initialGameState });
 }
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 function generateRoomId() {
   var result           = '';
@@ -82,4 +159,5 @@ function checkWinner() {
         if (p2Choice == "rock") {result = "P1";}
         else {result = "P2";}
     }
+    return result;
 }

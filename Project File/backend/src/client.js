@@ -1,44 +1,24 @@
-const ws = new WebSocket('ws://localhost:8080');
+const roomId = prompt("Enter room ID:");
+    const eventSource = new EventSource(`/events/${roomId}`);
 
-ws.onopen = function() {
-    console.log('Connected');
-};
+    eventSource.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      // Handle game state updates from the server
+      updateGameState(data);
+    };
 
-ws.onmessage = function(event) {
-    const data = JSON.parse(event.data);
-    const messagesDiv = document.getElementById('joinRoom-input');
-    switch (data.type) {
-        case 'waiting':
-            messagesDiv.innerHTML = data.player + ' is waiting for another player.';
-            break;
-        case 'created':
-            messagesDiv.innerHTML = 'Room created with ID: ' + data.roomId;
-            document.getElementById('choices').style.display = 'block';
-            break;
-        case 'joined':
-            messagesDiv.innerHTML = 'Joined room with ID: ' + data.roomId;
-            document.getElementById('choices').style.display = 'block';
-            break;
-        case 'start':
-            messagesDiv.innerHTML = 'Game started! You are ' + data.player;
-            break;
-        case 'error':
-            messagesDiv.innerHTML = 'Error: ' + data.message;
-            break;
-        case 'opponent_choice':
-            messagesDiv.innerHTML = 'Opponent chose: ' + data.choice;
-            break;
+    function updateGameState(gameState) {
+      // Update game UI based on the received game state
+      
     }
-};
 
-function createRoom() {
-    ws.send(JSON.stringify({ type: 'create' }));
-}
-
-function joinRoom(roomId) {
-    ws.send(JSON.stringify({ type: 'join', roomId: roomId }));
-}
-
-function sendChoice(roomId, choice) {
-    ws.send(JSON.stringify({ type: 'choice', roomId: roomId, choice: choice }));
-}
+    function sendGameAction(action) {
+      // Send game actions to the server
+      fetch(`/broadcast/${roomId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ action })
+      });
+    }

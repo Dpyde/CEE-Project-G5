@@ -1,11 +1,11 @@
-import express from "express";
+// import express from "express";
 
-import * as roomController from "../controllers/roomController.js";
+// import * as roomController from "../controllers/roomController.js";
 
-const router = express.Router();
+// const router = express.Router();
 
-router.get("/", roomController.getRooms);
-router.post("/", roomController.createRoom);
-router.delete("/:id", roomController.deleteRoom);
+// router.get("/", roomController.getRooms);
+// router.post("/", roomController.createRoom);
+// router.delete("/:id", roomController.deleteRoom);
 
-export default router;
+// export default router;
