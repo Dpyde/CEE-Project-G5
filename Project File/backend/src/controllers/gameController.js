@@ -1,32 +1,32 @@
-import Room from '../models/roomModel';
+import Room from '../models/roomModel.js';
+import express from 'express'
+import {v4} from 'uuid'
 
-const express = require('express');
-const { v4: uuidv4 } = require('uuid');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
+const uuidv4 = v4()
+const app = express.Router();
 
 // Store game rooms and their players
 const rooms = {};
 
 app.use(express.static('public'));
 
-app.get('/events/:roomId/:playerName', async (req, res) => {
+app.get('/events/:playerName?/:roomId?', async (req, res) => {
+  console.log(req.params)
     const roomId = req.params.roomId;
     const playerName = req.params.playerName;
-  
+    console.log(roomId)
+    console.log(playerName)
     try {
       let room = await Room.findOne({ roomId });
-  
       if (!room) {
         // If the room ID is not found, create a new room
-        room = new Room({
+        const newRoom = new Room({
           roomId: generateRoomId(),
-          players: [{ id: uuidv4(), name: playerName, choice: null, score: 0 }],
+          players: [{ id: uuidv4, name: playerName, choice: null, score: 0 }],
           state: null
         });
-  
-        await room.save();
+        console.log(newRoom)
+        await newRoom.save();
         res.redirect(`/events/${roomId}/${playerName}`);
         return;
       }
@@ -126,10 +126,6 @@ function startGame(roomId) {
     sendToRoom(roomId, { type: 'game_start', state: initialGameState });
 }
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
 function generateRoomId() {
   var result           = '';
   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -161,3 +157,5 @@ function checkWinner() {
     }
     return result;
 }
+
+export default app;

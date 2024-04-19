@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 
-import RoomRoute from "./routes/roomRoute.js";
+// import RoomRoute from "./routes/roomRoute.js";
+import GameController from './controllers/gameController.js'
 
 const app = express();
 
@@ -14,5 +15,6 @@ app.use(cors());
 
 // use routes
 app.use("/rooms", RoomRoute);
+app.use("/game", GameController)
 
 export default app;
