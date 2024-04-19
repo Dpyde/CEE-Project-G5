@@ -1,5 +1,5 @@
 import Room from "../models/roomModel.js";
-import { startGame, generateRoomId, checkWinner } from "../service/serv.js";
+//import { startGame, generateRoomId, checkWinner } from "../service/serv.js";
 import express from "express";
 import { v4 } from "uuid";
 
@@ -14,12 +14,15 @@ app.use(express.static("public"));
 app.get("/events/:roomId?", async (req, res) => {
   const roomId = req.params.roomId;
   const playerName = req.body.playerName;
-
+  console.log(req.params);
+  console.log(req.body);
   try {
     const room = await Room.findOne({ roomId });
     if (playerName && roomId && !room) {
+      console.log("One 1");
       res.status(404).send("Room not found");
     } else if (!room) {
+      console.log("Two 2");
       const newRoom = new Room({
         roomId: generateRoomId(),
         players: [{ id: v4(), name: playerName, choice: null, score: 0 }],
@@ -29,7 +32,7 @@ app.get("/events/:roomId?", async (req, res) => {
       res.redirect(`/events/${playerName}/${roomId}`);
       return;
     } else {
-      if (room.players.length === 2) {
+      if (room?.players.length === 2) {
         res.status(406).send("Room already full");
         return;
       }
@@ -51,7 +54,7 @@ app.get("/events/:roomId?", async (req, res) => {
 
     res.write(`event: connected\ndata: ${clientId}\n\n`);
 
-    if (room.players.length === 2) {
+    if (room?.players.length === 2) {
       startGame(roomId);
     }
 
@@ -118,5 +121,52 @@ app.post("/choose/:roomId?/:choice?", async (req, res) => {
     res.status(500).send("Internal server error");
   }
 });
+
+function startGame(roomId) {
+  const initialGameState = { playerChoices: {} };
+  rooms[roomId].players.forEach((player) => {
+    initialGameState.playerChoices[player.id] = null;
+  });
+  sendToRoom(roomId, { type: "game_start", state: initialGameState });
+}
+
+function generateRoomId() {
+  var result = "";
+  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < 4; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+async function checkWinner(roomId) {
+  const room = await Room.findOne({ roomId });
+  let p1Choice = room.players[0].choice;
+  let p2Choice = room.players[1].choice;
+  let result = "";
+  if (p1Choice === p2Choice) {
+    result = "Tie";
+  } else if (p1Choice == "rock") {
+    if (p2Choice == "scissors") {
+      result = "P1";
+    } else {
+      result = "P2";
+    }
+  } else if (p1Choice == "scissors") {
+    if (p2Choice == "paper") {
+      result = "P1";
+    } else {
+      result = "P2";
+    }
+  } else if (p1Choice == "paper") {
+    if (p2Choice == "rock") {
+      result = "P1";
+    } else {
+      result = "P2";
+    }
+  }
+  return result;
+}
 
 export default app;
