@@ -25,13 +25,16 @@ app.get("/events/:roomId?", async (req, res) => {
       console.log("Two 2");
       const newRoom = new Room({
         roomId: generateRoomId(),
-        players: [{ id: v4(), name: playerName, choice: null, score: 0 }],
+        players: [
+          { id: generatePlayerId(), name: playerName, choice: null, score: 0 },
+        ],
         state: null,
       });
       await newRoom.save();
       res.redirect(`/events/${playerName}/${roomId}`);
       return;
     } else {
+      console.log("Three 3");
       if (room?.players.length === 2) {
         res.status(406).send("Room already full");
         return;
@@ -39,8 +42,9 @@ app.get("/events/:roomId?", async (req, res) => {
       if (!room.players) {
         room.players = [];
       }
+      const clientId = generatePlayerId();
       room.players.push({
-        id: v4(),
+        id: clientId,
         name: playerName,
         choice: null,
         score: 0,
@@ -112,10 +116,9 @@ app.post("/choose/:roomId?/:choice?", async (req, res) => {
         room.state["winner"] = fname;
         await room.save();
       }
-      sendToRoom(roomId, { type: "game_state_update", state: room.state });
     }
 
-    res.sendStatus(200);
+    res.status(200);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal server error");
@@ -135,6 +138,16 @@ function generateRoomId() {
   var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   var charactersLength = characters.length;
   for (var i = 0; i < 4; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+function generatePlayerId() {
+  var result = "";
+  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < 6; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
