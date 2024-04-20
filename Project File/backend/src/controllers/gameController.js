@@ -14,10 +14,11 @@ app.use(express.static("public"));
 app.get("/events/:roomId?", async (req, res) => {
   const roomId = req.params.roomId;
   const playerName = req.body.playerName;
-  console.log(req.params);
-  console.log(req.body);
+  console.log(roomId);
+  console.log(playerName);
   try {
     const room = await Room.findOne({ roomId });
+    console.log(room);
     if (playerName && roomId && !room) {
       console.log("One 1");
       res.status(404).send("Room not found");
@@ -52,11 +53,11 @@ app.get("/events/:roomId?", async (req, res) => {
       await room.save();
     }
 
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
+    // res.setHeader("Content-Type", "text/event-stream");
+    // res.setHeader("Cache-Control", "no-cache");
+    // res.setHeader("Connection", "keep-alive");
 
-    res.write(`event: connected\ndata: ${clientId}\n\n`);
+    // res.write(`event: connected\ndata: ${clientId}\n\n`);
 
     if (room?.players.length === 2) {
       startGame(roomId);
@@ -72,10 +73,10 @@ app.get("/events/:roomId?", async (req, res) => {
   }
 });
 
-app.post("/choose/:roomId?/:choice?", async (req, res) => {
+app.post("/choose/:roomId?", async (req, res) => {
   const roomId = req.params.roomId;
   const playerId = req.body.playerId;
-  const choice = req.params.choice;
+  const choice = req.body.choice;
 
   try {
     const room = await Room.findOne({ roomId });
@@ -101,21 +102,23 @@ app.post("/choose/:roomId?/:choice?", async (req, res) => {
     );
 
     if (allPlayersChose) {
-      const result = checkWinner(roomId);
+      const l = checkWinner(roomId);
+      const result = l[0];
       if (result === "Tie") {
         room.state["winner"] = "Tie";
-        await room.save();
       } else if (result === "P1") {
         const fname = room.players[0].name;
         room.players[0].score = room.players[0].score + 1;
         room.state["winner"] = fname;
-        await room.save();
       } else if (result === "P2") {
         const fname = room.players[1].name;
         room.players[1].score = room.players[1].score + 1;
         room.state["winner"] = fname;
-        await room.save();
       }
+      room.players[0].choice = null;
+      room.players[1].choice = null;
+      await room.save();
+      res.send(l);
     }
 
     res.status(200);
@@ -179,7 +182,8 @@ async function checkWinner(roomId) {
       result = "P2";
     }
   }
-  return result;
+  const l = [result, p1Choice, p2Choice]
+  return l;
 }
 
 export default app;
