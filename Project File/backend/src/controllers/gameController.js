@@ -33,7 +33,8 @@ app.get("/events/:roomId?", async (req, res) => {
       });
       await newRoom.save();
       res.redirect(`/events/${playerName}/${roomId}`);
-      return;
+      res.send(newRoom.players[0]);
+      return newRoom.players[0];
     } else {
       console.log("Three 3");
       if (room?.players.length === 2) {
@@ -51,6 +52,8 @@ app.get("/events/:roomId?", async (req, res) => {
         score: 0,
       });
       await room.save();
+      res.send(room.players[1]);
+      return room.players[1];
     }
 
     // res.setHeader("Content-Type", "text/event-stream");
@@ -182,7 +185,7 @@ async function checkWinner(roomId) {
       result = "P2";
     }
   }
-  const l = [result, p1Choice, p2Choice]
+  const l = [result, p1Choice, p2Choice];
   return l;
 }
 
