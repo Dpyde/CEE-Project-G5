@@ -71,7 +71,7 @@ app.get("/events/:roomId?", async (req, res) => {
   }
 });
 
-app.post("/choose/:roomId?", async (req, res) => {
+app.post("/playerValue/:roomId?", async (req, res) => {
   const roomId = req.params.roomId;
   const playerId = req.body.playerId;
   const choice = req.body.choice;
