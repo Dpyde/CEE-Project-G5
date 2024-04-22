@@ -1,9 +1,6 @@
 import Room from "../models/roomModel.js";
-//import { startGame, generateRoomId, checkWinner } from "../service/serv.js";
 import express from "express";
-import { v4 } from "uuid";
 
-const uuidv4 = v4();
 const app = express.Router();
 
 // Store game rooms and their players
@@ -82,19 +79,12 @@ app.get("/join/:playerName/:roomId?", async (req, res) => {
   }
 });
 
-app.get("create/getState/:roomId"),
-  async (req, res) => {
-    const roomId = req.params.roomId;
+app.get("/create/getState/:roomId?", async (req, res) => {
+  const roomId = req.params.roomId;
 
-    const room = await Room.findOne({ roomId });
-    if (room.state === "game_start") {
-      res.send(true);
-      return true;
-    } else {
-      res.send(false);
-      return false;
-    }
-  };
+  const room = await Room.findOne({ roomId });
+  res.status(200).send(room);
+});
 
 app.post("/playerValue/:roomId?", async (req, res) => {
   const roomId = req.params.roomId;
