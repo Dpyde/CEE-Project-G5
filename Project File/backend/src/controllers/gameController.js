@@ -11,28 +11,43 @@ const rooms = {};
 
 app.use(express.static("public"));
 
-app.get("/events/:roomId?", async (req, res) => {
+app.use((req, res, next) => {
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  next();
+});
+
+app.get("/create", async (req, res) => {
+  const playerName = req.body.playerName;
+
+  try {
+    const newRoom = new Room({
+      roomId: generateRoomId(),
+      players: [
+        { id: generatePlayerId(), name: playerName, choice: null, score: 0 },
+      ],
+      state: null,
+    });
+    await newRoom.save();
+
+    res.send(newRoom);
+    return newRoom;
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Create room error");
+  }
+});
+
+app.get("/join/:roomId?", async (req, res) => {
   const roomId = req.params.roomId;
   const playerName = req.body.playerName;
 
   try {
     const room = await Room.findOne({ roomId });
-    console.log(room);
-    if (playerName && roomId && !room) {
-      res.status(404).send("Room not found");
-    } else if (!room) {
-      const newRoom = new Room({
-        roomId: generateRoomId(),
-        players: [
-          { id: generatePlayerId(), name: playerName, choice: null, score: 0 },
-        ],
-        state: null,
-      });
-      await newRoom.save();
 
-      res.send(newRoom);
-      res.redirect(`/events/${roomId}`);
-      return newRoom;
+    if (playerName && roomId && !room) {
+      res.send("Room not found");
     } else {
       if (room?.players.length === 2) {
         res.status(406).send("Room already full");
@@ -53,12 +68,6 @@ app.get("/events/:roomId?", async (req, res) => {
       return room;
     }
 
-    // res.setHeader("Content-Type", "text/event-stream");
-    // res.setHeader("Cache-Control", "no-cache");
-    // res.setHeader("Connection", "keep-alive");
-
-    // res.write(`event: connected\ndata: ${clientId}\n\n`);
-
     if (room?.players.length === 2) {
       startGame(roomId);
     }
@@ -69,7 +78,7 @@ app.get("/events/:roomId?", async (req, res) => {
     });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).send("Internal server error");
+    res.status(500).send("Join room error");
   }
 });
 
@@ -128,13 +137,19 @@ app.post("/playerValue/:roomId?", async (req, res) => {
   }
 });
 
-function startGame(roomId) {
-  const initialGameState = { playerChoices: {} };
-  rooms[roomId].players.forEach((player) => {
-    initialGameState.playerChoices[player.id] = null;
-  });
+async function startGame(roomId) {
+  res.redirect("/frontend/gameScreen.html");
+  const room = await Room.findOne({ roomId });
 
-  res.send("game_start");
+  if (!room) {
+    res.status(404).send("Room not found");
+    return;
+  }
+
+  if (room) {
+    room.state = "game_start";
+  }
+  await room.save();
 }
 
 function generateRoomId() {
