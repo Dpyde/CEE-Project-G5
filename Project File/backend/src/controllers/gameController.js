@@ -133,7 +133,7 @@ function startGame(roomId) {
   rooms[roomId].players.forEach((player) => {
     initialGameState.playerChoices[player.id] = null;
   });
-  sendToRoom(roomId, { type: "game_start", state: initialGameState });
+  res.send("game start");
 }
 
 function generateRoomId() {
