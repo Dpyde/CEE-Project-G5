@@ -176,6 +176,17 @@ p {
   width: 100px;
   aspect-ratio: 1/1;
 }
+.rock{
+    
+}
+
+.paper{
+
+}
+
+.scrissor{
+  
+}
 
 @media only screen and (min-width: 820px) {
   .game-container {
@@ -202,4 +213,6 @@ p {
   #player2 .game-img-list {
     transform: rotate(-90deg);
   }
+
+
 }
