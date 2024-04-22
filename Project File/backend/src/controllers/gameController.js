@@ -39,9 +39,9 @@ app.get("/create", async (req, res) => {
   }
 });
 
-app.get("/join/:roomId?", async (req, res) => {
+app.get("/join/:playerName/:roomId?", async (req, res) => {
+  const playerName = req.params.playerName;
   const roomId = req.params.roomId;
-  const playerName = req.body.playerName;
 
   try {
     const room = await Room.findOne({ roomId });
@@ -64,12 +64,12 @@ app.get("/join/:roomId?", async (req, res) => {
         score: 0,
       });
       await room.save();
-      res.send(room);
-      return room;
     }
 
     if (room?.players.length === 2) {
       startGame(roomId);
+      res.send(room);
+      return room;
     }
 
     req.on("close", async () => {
