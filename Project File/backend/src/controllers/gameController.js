@@ -32,7 +32,7 @@ app.get("/events/:roomId?", async (req, res) => {
         state: null,
       });
       await newRoom.save();
-      res.redirect(`/events/${playerName}/${roomId}`);
+      res.redirect(`/events/${roomId}`);
       res.send(newRoom.players[0]);
       return newRoom.players[0];
     } else {
