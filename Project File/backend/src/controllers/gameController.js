@@ -14,16 +14,12 @@ app.use(express.static("public"));
 app.get("/events/:roomId?", async (req, res) => {
   const roomId = req.params.roomId;
   const playerName = req.body.playerName;
-  console.log(roomId);
-  console.log(playerName);
   try {
     const room = await Room.findOne({ roomId });
     console.log(room);
     if (playerName && roomId && !room) {
-      console.log("One 1");
       res.status(404).send("Room not found");
     } else if (!room) {
-      console.log("Two 2");
       const newRoom = new Room({
         roomId: generateRoomId(),
         players: [
@@ -36,7 +32,6 @@ app.get("/events/:roomId?", async (req, res) => {
       res.send(newRoom.players[0]);
       return newRoom.players[0];
     } else {
-      console.log("Three 3");
       if (room?.players.length === 2) {
         res.status(406).send("Room already full");
         return;
