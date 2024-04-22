@@ -82,6 +82,20 @@ app.get("/join/:playerName/:roomId?", async (req, res) => {
   }
 });
 
+app.get("create/getState/:roomId"),
+  async (req, res) => {
+    const roomId = req.params.roomId;
+
+    const room = await Room.findOne({ roomId });
+    if (room.state === "game_start") {
+      res.send(true);
+      return true;
+    } else {
+      res.send(false);
+      return false;
+    }
+  };
+
 app.post("/playerValue/:roomId?", async (req, res) => {
   const roomId = req.params.roomId;
   const playerId = req.body.playerId;
