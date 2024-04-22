@@ -1,4 +1,20 @@
-// import { BACKEND_URL } from "./config.js";
+import { BACKEND_URL } from "./config.js";
+
+export function createPlayerValue() {
+    fetch(url, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "post",
+        body: JSON.stringify({
+            choice: text,
+        }),
+    });
+}
+
+function getPlayerValue() {
+
+}
 
 
 

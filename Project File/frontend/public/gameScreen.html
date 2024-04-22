@@ -18,9 +18,24 @@
                     <!-- span tag waiting for get user point -->
                     <p>score : <span id="player1score">1</span></p>
                     <section class="game-img-list" id="player1pane">
-                        <img class="game-img" id="rock1"  src="./asset//test.png" />
-                        <img class="game-img" id="paper1"   src="./asset//test.png" />
-                        <img class="game-img" id="scrissor1" src="./asset//test.png" />
+                        <img
+                            class="game-img"
+                            id="rock"
+                            onclick="choosePlayer1Value('rock')"
+                            src="./asset//test.png"
+                        />
+                        <img
+                            class="game-img"
+                            id="paper"
+                            onclick="choosePlayer1Value('paper')"
+                            src="./asset//test.png"
+                        />
+                        <img
+                            class="game-img"
+                            id="scrissors"
+                            onclick="choosePlayer1Value('scrissors')"
+                            src="./asset//test.png"
+                        />
                     </section>
                 </section>
                 <section id="player2">
@@ -29,14 +44,12 @@
                     <!-- span tag waiting for get user point -->
                     <p>score : <span id="player2score">2</span></p>
                     <section class="game-img-list" id="player2pane">
-                        <img class="game-img"id="rock2" src="./asset//test.png" />
-                        <img class="game-img"id="paper2" src="./asset//test.png" /> 
-                        <img class="game-img"id="scrissor2" src="./asset//test.png" />
+                        
                     </section>
                 </section>
             </div>
         </div>
+        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+        <script type="module" src="./scripts/gamescreen.js"></script>
     </body>
-    </html>
-
-    
+</html>

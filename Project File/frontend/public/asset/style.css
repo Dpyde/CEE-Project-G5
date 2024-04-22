@@ -195,24 +195,14 @@ p {
   }
 
   .game-img-list {
-    margin-top: 200px;
+    margin-top: 150px;
   }
 
   #player1 {
     flex-direction: column;
   }
 
-  #player2 {
-    flex-direction: column;
-  }
-
   #player1 .game-img-list {
     transform: rotate(90deg);
   }
-
-  #player2 .game-img-list {
-    transform: rotate(-90deg);
-  }
-
-
 }
