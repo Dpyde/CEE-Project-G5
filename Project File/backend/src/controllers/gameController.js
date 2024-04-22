@@ -14,12 +14,15 @@ app.use(express.static("public"));
 app.get("/events/:roomId?", async (req, res) => {
   const roomId = req.params.roomId;
   const playerName = req.body.playerName;
+  
   try {
     const room = await Room.findOne({ roomId });
     console.log(room);
     if (playerName && roomId && !room) {
+      console.log("One 1");
       res.status(404).send("Room not found");
     } else if (!room) {
+      console.log("Two 2");
       const newRoom = new Room({
         roomId: generateRoomId(),
         players: [
@@ -28,10 +31,11 @@ app.get("/events/:roomId?", async (req, res) => {
         state: null,
       });
       await newRoom.save();
-      res.redirect(`/events/${roomId}`);
-      res.send(newRoom.players[0]);
-      return newRoom.players[0];
+
+      res.redirect(`/events/${playerName}/${roomId}`);
+      return;
     } else {
+      console.log("Three 3");
       if (room?.players.length === 2) {
         res.status(406).send("Room already full");
         return;
@@ -47,8 +51,7 @@ app.get("/events/:roomId?", async (req, res) => {
         score: 0,
       });
       await room.save();
-      res.send(room.players[1]);
-      return room.players[1];
+
     }
 
     // res.setHeader("Content-Type", "text/event-stream");
@@ -131,7 +134,9 @@ function startGame(roomId) {
   rooms[roomId].players.forEach((player) => {
     initialGameState.playerChoices[player.id] = null;
   });
-  res.send("game start");
+
+  sendToRoom(roomId, { type: "game_start", state: initialGameState });
+
 }
 
 function generateRoomId() {
@@ -180,7 +185,9 @@ async function checkWinner(roomId) {
       result = "P2";
     }
   }
-  const l = [result, p1Choice, p2Choice];
+
+  const l = [result, p1Choice, p2Choice]
+
   return l;
 }
 
