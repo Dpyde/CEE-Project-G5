@@ -1,3 +1,4 @@
+
 function startGame(roomId) {
   const initialGameState = { playerChoices: {} };
   rooms[roomId].players.forEach((player) => {
