@@ -142,6 +142,20 @@ app.post("/playerValue/:roomId?", async (req, res) => {
   }
 });
 
+app.delete("/delete/:roomId", async (req, res) => {
+  const rId = req.params.roomId;
+
+  const room = Room.findOne({ rId });
+
+  console.log(room);
+  if (!room) {
+    res.status(404).send("Room not found");
+  } else {
+    await Room.deleteOne({ roomId: rId });
+    res.status(200).send("deleted");
+  }
+});
+
 async function startGame(roomId) {
   const room = await Room.findOne({ roomId });
   //console.log(room);
