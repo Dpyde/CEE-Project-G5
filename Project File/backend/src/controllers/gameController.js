@@ -42,8 +42,8 @@ app.get("/join/:playerName/:roomId?", async (req, res) => {
 
   try {
     const room = await Room.findOne({ roomId });
-
-    if (playerName && roomId && !room) {
+    //console.log(roomId, room);
+    if (!room) {
       res.send("Room not found");
     } else {
       if (room?.players.length === 2) {
@@ -64,15 +64,16 @@ app.get("/join/:playerName/:roomId?", async (req, res) => {
     }
 
     if (room?.players.length === 2) {
-      startGame(roomId);
-      res.send(room);
-      return room;
+      const r = startGame(roomId);
+      //res.redirect("/frontend/gameScreen.html");
+      res.send(r);
+      return r;
     }
 
-    req.on("close", async () => {
-      room.players = room.players.filter((player) => player.id !== clientId);
-      await room.save();
-    });
+    // req.on("close", async () => {
+    //   room.players = room.players.filter((player) => player.id !== clientId);
+    //   await room.save();
+    // });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Join room error");
@@ -142,9 +143,8 @@ app.post("/playerValue/:roomId?", async (req, res) => {
 });
 
 async function startGame(roomId) {
-  res.redirect("/frontend/gameScreen.html");
   const room = await Room.findOne({ roomId });
-
+  console.log(room);
   if (!room) {
     res.status(404).send("Room not found");
     return;
@@ -154,6 +154,8 @@ async function startGame(roomId) {
     room.state = "game_start";
   }
   await room.save();
+  console.log(room);
+  return room;
 }
 
 function generateRoomId() {
