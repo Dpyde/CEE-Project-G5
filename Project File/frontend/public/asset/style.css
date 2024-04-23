@@ -85,9 +85,10 @@ p {
 }
 
 .home-img {
-  height: 100px;
+  height: calc(60px + 2vw);
   aspect-ratio: 1/1;
   transition: .3s;
+  margin: 0 10px;
 
   &:hover {
     scale: 1.2;
@@ -173,19 +174,9 @@ p {
 }
 
 .game-img {
-  width: 100px;
+  width: calc(60px + 2vw);
+  margin: 0 10px;
   aspect-ratio: 1/1;
-}
-.rock{
-    
-}
-
-.paper{
-
-}
-
-.scrissor{
-  
 }
 
 @media only screen and (min-width: 820px) {
@@ -196,6 +187,13 @@ p {
 
   .game-img-list {
     margin-top: 150px;
+  }
+
+  .game-img {
+    width: calc(60px + 2vw);
+    margin: 0 10px;
+    aspect-ratio: 1/1;
+    transform: rotate(270deg);
   }
 
   #player1 {

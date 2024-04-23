@@ -19,7 +19,7 @@
     --space-big: 20px;
     --space-small: 8px;
 
-    --font-big: calc(32px + 1.5vw);
+    --font-big: calc(24px + 1.5vw);
     --font-medium: calc(16px + 1.5vw);
     --font-small: calc(8px + 1.5vw);
 }

@@ -14,42 +14,40 @@
             <div class="game-container">
                 <section id="player1">
                     <!-- p tag is where we get username -->
-                    <p id="player1name">name1</p>
+                    <p id="playerName-1">name1</p>
                     <!-- span tag waiting for get user point -->
-                    <p>score : <span id="player1score">1</span></p>
-                    <section class="game-img-list" id="player1pane">
-                        <img
-                            class="game-img"
-                            id="rock"
-                            onclick="choosePlayer1Value('rock')"
-                            src="./asset//test.png"
-                        />
+                    <p>score : <span id="playerScore-1">1</span></p>
+                    <section class="game-img-list" id="playerPane-1">
                         <img
                             class="game-img"
                             id="paper"
-                            onclick="choosePlayer1Value('paper')"
-                            src="./asset//test.png"
+                            src="./asset/paper.png"
                         />
                         <img
                             class="game-img"
-                            id="scrissors"
-                            onclick="choosePlayer1Value('scrissors')"
-                            src="./asset//test.png"
+                            id="rock"
+                            src="./asset/rock.png"
+                        />
+                        <img
+                            class="game-img"
+                            id="scissor"
+                            src="./asset/scissor.png"
                         />
                     </section>
                 </section>
                 <section id="player2">
                     <!-- p tag is where we get username -->
-                    <p id="player2name">name2</p>
+                    <p id="playerName-2">name2</p>
                     <!-- span tag waiting for get user point -->
-                    <p>score : <span id="player2score">2</span></p>
-                    <section class="game-img-list" id="player2pane">
-                        
+                    <p>score : <span id="playerScore-2">2</span></p>
+                    <section class="game-img-list" id="playerPane-2">
                     </section>
                 </section>
             </div>
         </div>
         <script src="https://cdn.lordicon.com/lordicon.js"></script>
-        <script type="module" src="./scripts/gamescreen.js"></script>
+        <script type="module" src="./scripts/gameHandler.js"></script>
     </body>
 </html>
+
+

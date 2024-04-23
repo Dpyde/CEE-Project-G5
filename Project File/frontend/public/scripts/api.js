@@ -1,95 +1,101 @@
-import { BACKEND_URL } from "./config.js";
-
-export function createPlayerValue() {
-    fetch(url, {
+export async function getRoomInfo(roomId) {
+    const room = await fetch(`http://localhost:3222/get/room/${roomId}`, {
         headers: {
             "Content-Type": "application/json",
         },
-        method: "post",
+        method: "GET",
+    }).then((res) => res.json());
+    return room;
+}
+
+export async function getRoomJoining(playerName, roomId) {
+    try {
+        const room = await fetch(
+            `http://localhost:3222/get/join/${playerName}/${roomId}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "GET",
+            }
+        ).then((res) => res.json())
+        return room;
+    } catch (e) {
+        alert("Room not found");
+        return;
+    }
+}
+
+export async function createRoom(playerName) {
+    const room = await fetch("http://localhost:3222/create/room", {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "POST",
         body: JSON.stringify({
-            choice: text,
+            playerName: playerName,
         }),
+    }).then((res) => res.json());
+    return room;
+}
+
+export async function createWinner(roomId, playerName, choice) {
+    await fetch(`http://localhost:3222/create/winner/${roomId}`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+            playerName: playerName,
+            choice: choice,
+        }),
+    })
+    return ;
+}
+
+export async function createResult(playerName, roomId) {
+    const result = await fetch(`http://localhost:3222/create/result/${roomId}`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+            playerName: playerName
+        })
+    }).then((res) => res.json())
+    .catch(err => console.error(err));
+    return result;
+}
+
+export async function createEnd(playerName, roomId) {
+    await fetch(`http://localhost:3222/create/end/${roomId}`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+            playerName: playerName
+        })
+    })
+    return;
+}
+
+export async function updateChoice(roomId) {
+    await fetch(`http://localhost:3222/update/choice/${roomId}`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "PUT",
     });
+    return;
 }
 
-function getPlayerValue() {
-
+export async function deleteRoom(roomId) {
+    await fetch(`http://localhost:3222/delete/${roomId}`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        method: "DELETE",
+    });
+    return;
 }
-
-
-
-
-// export async function getItems() {
-//   const items = await fetch(`${BACKEND_URL}/items`).then((r) => r.json());
-
-//   return items;
-// }
-
-// export async function createItem(item) {
-//   await fetch(`${BACKEND_URL}/items`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(item),
-//   });
-// }
-
-// export async function deleteItem(id, item) {
-//   await fetch(`${BACKEND_URL}/items/${id}`, {
-//     method: "DELETE",
-//   });
-// }
-
-// export async function filterItems(filterName, lowerPrice, upperPrice) {
-//   try {
-//     let data = {
-//       filterName: filterName,
-//       lowerPrice: lowerPrice,
-//       upperPrice: upperPrice,
-//     };
-
-//     // Make a POST request to the backend with the data in the body
-//     const response = await fetch(`${BACKEND_URL}/items/filter`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(data),
-//     });
-
-//     if (!response.ok) {
-//       throw new Error("Network response was not ok.");
-//     }
-
-//     // Parse the response as JSON
-//     const filteredItems = await response.json();
-
-//     // Return the filtered items
-//     return filteredItems;
-//   } catch (error) {
-//     console.error("Error fetching filtered items:", error);
-//     return [];
-//   }
-// }
-
-// export async function getMembers() {
-//   const members = await fetch(`${BACKEND_URL}/members`).then((r) => r.json());
-//   return members;
-// }
-
-// export async function createMember(member) {
-//   await fetch(`${BACKEND_URL}/members`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(member),
-//   });
-// }
-
-// export async function deleteMember(id, item) {
-//   await fetch(`${BACKEND_URL}/members/${id}`, {
-//     method: "DELETE",
-//   });
-// }

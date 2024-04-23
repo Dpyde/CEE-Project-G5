@@ -13,44 +13,23 @@
                 <header class="result-header">
                         <!-- if player win h1 will show You Win -->
                         <!-- if player lost h1 will show You Lost -->
-                    <h1>You Win</h1>
+                    <h1 id="result-header-text"></h1>
                     
                     <!-- span tag tell the scores -->
-                    <p>Score <span>4</span> : <span>1</span></p>
+                    <p>Score <span id="result-playerScore-1">4</span> : <span id="result-playerScore-2">1</span></p>
                         <!-- if player win in section show icon id=win-icon -->
                         <!-- if player lose in section show icon id=lose-icon -->
-                    <section>
-                        <lord-icon
-                            id="win-icon"
-                            src="https://cdn.lordicon.com/jcepibgt.json"
-                            trigger="loop"
-                            delay="700"
-                            colors="primary:#1c1c1c"
-                            style="width: 64px; height: 64px"
-                        >
-                        </lord-icon>
-                        <!-- <lord-icon
-                            id="lose-icon"
-                            src="https://cdn.lordicon.com/sbrtyqxj.json"
-                            trigger="loop"
-                            delay="700"
-                            colors="primary:#1c1c1c"
-                            style="width: 64px; height: 64px"
-                        >
-                        </lord-icon> -->
+                    <section id="result-icon">
                     </section>
                 </header>
                 <section class="button-set-display">
-                    <!-- button play again waiting for implementing -->
-                    <a class="button" onclick="waitingForImplement()"
-                        >Play again</a
-                    >
-                    <a class="button" href="startScreen.html"
+                    <a class="button" href="index.html"
                         >Back to main menu</a
                     >
                 </section>
             </div>
         </div>
         <script src="https://cdn.lordicon.com/lordicon.js"></script>
+        <script type="module" src="./scripts/resultHandler.js"></script>
     </body>
 </html>

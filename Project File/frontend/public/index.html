@@ -10,22 +10,22 @@
     <body>
         <div class="bg">
             <div class="container">
-                <h1>Rock Paper Scrissors Game</h1>
+                <h1>Rock Paper Scrissor Game</h1>
                 <section class="home-img-list">
                     <img
                         class="home-img"
-                        src="./asset/test.png"
-                        alt="rock-img"
-                    />
-                    <img
-                        class="home-img"
-                        src="./asset/test.png"
+                        src="./asset/paper.png"
                         alt="paper-img"
                     />
                     <img
                         class="home-img"
-                        src="./asset/test.png"
-                        alt="sscrissor-img"
+                        src="./asset/rock.png"
+                        alt="rock-img"
+                    />
+                    <img
+                        class="home-img"
+                        src="./asset/scissor.png"
+                        alt="scrissor-img"
                     />
                 </section>
                 <section class="home-username-input-display">
@@ -41,17 +41,17 @@
                 <section class="button-set-display">
                     <a
                         class="button"
-                        onclick="goToWithCheckInput('./creatRoomScreen.html')"
+                        id="button-createGame"
                         >Create Game</a
                     >
                     <a
                         class="button"
-                        onclick="goToWithCheckInput('./joinRoomScreen.html')"
+                        id="button-joinGame"
                         >Join Game</a
                     >
                 </section>
             </div>
         </div>
-        <script src="./scripts/index.js"></script>
+        <script type="module" src="./scripts/index.js"></script>
     </body>
 </html>
