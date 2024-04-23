@@ -11,5 +11,5 @@ mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopol
     .catch((err) => console.error('Error occurred while connecting to MongoDB', err));
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Backend Server ready at http://localhost:${PORT}`);
+  console.log(`Backend Server ready at ${PORT}`);
 });

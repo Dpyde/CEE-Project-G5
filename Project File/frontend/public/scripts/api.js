@@ -1,5 +1,7 @@
+import { BACKEND_URL } from "./config.js";
+
 export async function getRoomInfo(roomId) {
-    const room = await fetch(`http://localhost:3222/get/room/${roomId}`, {
+    const room = await fetch(`${BACKEND_URL}/get/room/${roomId}`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -11,7 +13,7 @@ export async function getRoomInfo(roomId) {
 export async function getRoomJoining(playerName, roomId) {
     try {
         const room = await fetch(
-            `http://localhost:3222/get/join/${playerName}/${roomId}`,
+            `${BACKEND_URL}/get/join/${playerName}/${roomId}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -27,7 +29,7 @@ export async function getRoomJoining(playerName, roomId) {
 }
 
 export async function createRoom(playerName) {
-    const room = await fetch("http://localhost:3222/create/room", {
+    const room = await fetch(`${BACKEND_URL}/create/room`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -40,7 +42,7 @@ export async function createRoom(playerName) {
 }
 
 export async function createWinner(roomId, playerName, choice) {
-    await fetch(`http://localhost:3222/create/winner/${roomId}`, {
+    await fetch(`${BACKEND_URL}/create/winner/${roomId}`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -54,7 +56,7 @@ export async function createWinner(roomId, playerName, choice) {
 }
 
 export async function createResult(playerName, roomId) {
-    const result = await fetch(`http://localhost:3222/create/result/${roomId}`, {
+    const result = await fetch(`${BACKEND_URL}/create/result/${roomId}`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -68,7 +70,7 @@ export async function createResult(playerName, roomId) {
 }
 
 export async function createEnd(playerName, roomId) {
-    await fetch(`http://localhost:3222/create/end/${roomId}`, {
+    await fetch(`${BACKEND_URL}/create/end/${roomId}`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -81,7 +83,7 @@ export async function createEnd(playerName, roomId) {
 }
 
 export async function updateChoice(roomId) {
-    await fetch(`http://localhost:3222/update/choice/${roomId}`, {
+    await fetch(`${BACKEND_URL}/update/choice/${roomId}`, {
         headers: {
             "Content-Type": "application/json",
         },
@@ -91,7 +93,7 @@ export async function updateChoice(roomId) {
 }
 
 export async function deleteRoom(roomId) {
-    await fetch(`http://localhost:3222/delete/${roomId}`, {
+    await fetch(`${BACKEND_URL}/delete/${roomId}`, {
         headers: {
             "Content-Type": "application/json",
         },

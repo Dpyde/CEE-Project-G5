@@ -1,5 +1,5 @@
 import { createWinner, createResult, getRoomInfo, updateChoice } from "./api.js";
-import { GAME_ROUND } from "./config.js";
+import { MAX_SCORE } from "./config.js";
 
 const playerName1 = document.querySelector("#playerName-1");
 const playerScore1 = document.querySelector("#playerScore-1");
@@ -35,7 +35,6 @@ async function roomSetting() {
             playerScore2.innerHTML = player.score;
         }
     });
-    resetPlayerIcon();
 }
 
 function scoreSetting(player1, player2) {
@@ -65,7 +64,7 @@ async function checkGameState(timeInterval) {
         setTimeout(() => {
             scoreSetting(room.players[0], room.players[1]);
             setTimeout(() => {
-                resetPlayerIcon();
+                resetPlayerIcon(room.players[0], room.players[1]);
             }, 1000);
         }, 1000);
     }
@@ -103,8 +102,8 @@ function revealAnotherPlayerValue(choice) {
     playerPane2.appendChild(img);
 }
 
-async function resetPlayerIcon() {
-    if (round === GAME_ROUND) {
+async function resetPlayerIcon(player1, player2) {
+    if (player1.score === MAX_SCORE || player2.score === MAX_SCORE) {
         goToResultPage();
     } else {
         await updateChoice(roomId);
