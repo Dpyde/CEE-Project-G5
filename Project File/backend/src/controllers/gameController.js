@@ -144,7 +144,7 @@ app.post("/playerValue/:roomId?", async (req, res) => {
 
 async function startGame(roomId) {
   const room = await Room.findOne({ roomId });
-  console.log(room);
+  //console.log(room);
   if (!room) {
     res.status(404).send("Room not found");
     return;
@@ -154,7 +154,7 @@ async function startGame(roomId) {
     room.state = "game_start";
   }
   await room.save();
-  console.log(room);
+  //console.log(room);
   return room;
 }
 
